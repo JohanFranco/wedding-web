@@ -2,7 +2,8 @@ import { column, defineDb } from 'astro:db';
 
 const Guests = {
   columns: {
-    phone: column.text({ primaryKey: true }),
+    id: column.text({ primaryKey: true }),
+    phone: column.text(),
     fullName: column.text(),
     tickets: column.text()
   }

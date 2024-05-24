@@ -1,6 +1,10 @@
 import type { APIRoute } from "astro";
 import { object, safeParse, string } from 'valibot'; 
-import { db, Guests } from 'astro:db'
+import { db, eq, Guests } from 'astro:db'
+
+const verifySchema = object({
+  phone: string(),
+})
 
 export const GET: APIRoute = async ({ params, request }) => {
     try {
@@ -23,9 +27,22 @@ export const GET: APIRoute = async ({ params, request }) => {
 }
 
 export const POST: APIRoute = async ({ params, request}) => {
-    //VALIDATE THAT THE PHONE WAS REGISTER IN GUEEST TABLE 
 
-    //IF NOT REGISTEERD RETURN NOT FOUND
+    const { success, output } = safeParse(verifySchema, await request.json())
+        if(!success) return new Response("Bad Request", { status: 400 })
 
-    //REGISTERRES RETURN STRING QR
+    const { phone } = output
+    const guest = await db.select().from(Guests).where(eq(Guests.phone, phone))
+    
+    if(guest.length == 1){
+      return new Response(JSON.stringify(guest[0]), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    return new Response("Ooh! Al parecer no fuiste invitado. Suerte para la próxima.", { status: 404 })
+
 }
