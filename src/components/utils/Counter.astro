@@ -1,0 +1,66 @@
+---
+
+---
+
+
+<div class="flex justify-center w-full mt-10 component">
+    <div class="text-white flex flex-wrap justify-center sm:justify-between max-w-screen-lg">
+        <div class="min-w-36 bg-amber-950 p-6 m-2 text-center flex-1 sm:flex-none">
+            <span class="sans text-xs">esperamos por el</span>
+            <p class="gupter text-4xl">gran día</p>
+        </div>
+        <div class="min-w-36 bg-amber-950 p-6 m-2 text-center flex-1 sm:flex-none">
+            <span class="gupter text-4xl" id="days"></span>
+            <p class="sans text-xs mt-3">días</p>
+        </div>
+        <div class="min-w-36 bg-amber-950 p-6 m-2 text-center flex-1 sm:flex-none">
+            <span class="gupter text-4xl" id="hours"></span>
+            <p class="sans text-xs mt-3">horas</p>
+        </div>
+        <div class="min-w-36 bg-amber-950 p-6 m-2 text-center flex-1 sm:flex-none">
+            <span class="gupter text-4xl" id="minutes"></span>
+            <p class="sans text-xs mt-3">minutos</p>
+        </div>
+        <div class="min-w-36 bg-amber-950 p-6 m-2 text-center flex-1 sm:flex-none">
+            <span class="gupter text-4xl" id="seconds"></span>
+            <p class="sans text-xs mt-3">segundos</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+    const days = document.getElementById('days');
+    const hours = document.getElementById('hours');
+    const minutes = document.getElementById('minutes');
+    const seconds = document.getElementById('seconds');
+
+    const targetTime = new Date(`Octuber 18 2024 19:00:00`)
+    const currentTime = new Date()
+    let diff = targetTime - currentTime;    
+
+    const updateCountdown = () => {   
+    const remainingDays = Math.max(Math.floor(diff / 1000 / 60 / 60 / 24 ));
+    const remainingHours = Math.max(Math.floor(diff / 1000 / 60 / 60) % 24);
+    const remainingMinutes = Math.max(Math.floor(diff / 1000 / 60) % 60);
+    const remainingSeconds = Math.max(Math.floor(diff / 1000 ) % 60);
+
+
+    days.innerHTML = remainingDays
+    hours.innerHTML = remainingHours < 10 ? '0' + remainingHours  : remainingHours
+    minutes.innerHTML = remainingMinutes < 10 ? '0' + remainingMinutes : remainingMinutes
+    seconds.innerHTML = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds
+
+}
+
+const countdownInterval = setInterval(() => {
+  updateCountdown();
+      diff -= 1000;
+      if (diff < 0) {
+        diff = 0; 
+    }
+}, 1000);
+})
+
+</script>

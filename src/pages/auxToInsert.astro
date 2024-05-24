@@ -1,0 +1,47 @@
+---
+
+---
+
+<main>
+    <form onsubmit="subtmit()">
+        <input type="text" id="tel" placeholder="telefono"> <br>
+        <input type="text" id="nombre" placeholder="Nombre"> <br>
+        <input type="text" id="num" placeholder="cantidad de entradas"> <br>
+        <button type="submit">Guardar Invitado</button>
+    </form>
+</main>
+
+
+<style>
+    form{
+        padding: 20px;
+    }
+    input, button{
+        border: solid black 1px;
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        width: 300px;
+    }
+
+    button{
+        background-color: cadetblue;
+        color: white;
+    }
+</style>
+
+<script>
+    const submit = () =>{
+        const phone = document.getElementById('tel');
+        const fullName = document.getElementById('nombre');
+        const tickets = document.getElementById('num');
+
+        fetch('/api/register', {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({ phone, fullName, tickets})
+        })
+    }
+</script>
