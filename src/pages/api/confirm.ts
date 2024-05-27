@@ -43,6 +43,6 @@ export const POST: APIRoute = async ({ params, request}) => {
       });
     }
 
-    return new Response("Ooh! Al parecer no fuiste invitado. Suerte para la próxima.", { status: 404 })
+    return new Response("Phone number not found", { status: 404 })
 
 }

@@ -5,7 +5,8 @@ const Guests = {
     id: column.text({ primaryKey: true }),
     phone: column.text(),
     fullName: column.text(),
-    tickets: column.text()
+    tickets: column.text(),
+    isScanned: column.boolean()
   }
 
 }

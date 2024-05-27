@@ -2,7 +2,7 @@
 ---
 
 <section class="mt-40 mb-10 component">
-    <h3 class="gupter text-2xl text-center component">confirma tu asistencia</h3>
+    <h3 class="gupter text-2xl text-center component">Confirma tu asistencia</h3>
     <div class="p-12 w-full flex justify-center">
         <form class="group-form gupter w-full md:w-1/3" id="myForm">
             <label for="number">Número telefónico</label> <br>
@@ -13,30 +13,26 @@
 </section>
 
 <style>
-    input{
+    input {
         background-color: transparent !important;
     }
 </style>
 
-<!-- 
-    TODO: CON date.id GENERAR UN QR QUE TENGA LA URL
-    TODO: MOSTRAR EL QR ABAJO DEL FORM
-    TODO: CREAR UNA NUEVA ASTRO PAGE QUE RECIBA EL ID COMO PARAMATRO PARA MOSTRAR LA INVITACIÖN Y QUE RECIBA OTRO PARAM (ISGUEST)
-    TODO: SI ISGUEST ES FALSE NO DESCARGAR LA INVITACION
-    TODO: SI ISGUEST ES TRUEE DESCARGAR QR AUTOMATICAMENTE USANDO COMO PLANTILLA LA PAGE ANTERIOR Y ENVIAR URL A SMS
-    TODO: ALERT QUE AVISE SOBRE LO ANTERIRO
-    TODO: EN CASO DE QUE LA PERSONA NO SEA INVITADA MOSTRAR EL MENSAJE EN LUGAR DEL QR
- -->
+<script>
+    import { Notyf } from 'notyf';
+    import 'notyf/notyf.min.css';
 
- <script>
-     const checkInvitations = async (event) =>{
+    const notyf = new Notyf({
+        duration: 5000
+    });
+
+    const checkInvitations = async (event) => {
         event.preventDefault();
 
-         try{
+        try {
             const phone = document.getElementById('phone').value;
 
-
-            const reesponse = await fetch('api/confirm',{
+            const response = await fetch('api/confirm', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -46,20 +42,16 @@
                 })
             });
 
-            if(!reesponse.ok){
-                console.log(reesponse)
+            if (!response.ok) {
+                notyf.error('Ohh! Parece que no estás invitado. Suerte para la próxima.');
+            } else {
+                const data = await response.json();
+                // Manejar la respuesta exitosa
             }
-            else{
-                const data = await reesponse.json();
-                /// GENERAR QR data.id
-            }
+        } catch (error) {
+            console.log("ERROR");
+        }
+    };
 
-
-
-         }catch(error){
-             console.log("ERROR")
-         }
-     }
-     document.getElementById('myForm').addEventListener('submit', checkInvitations);
-
- </script>
+    document.getElementById('myForm').addEventListener('submit', checkInvitations);
+</script>

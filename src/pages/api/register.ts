@@ -15,8 +15,9 @@ export const POST: APIRoute = async ( {params, request} ) => {
         if(!success) return new Response("Bad Request", { status: 400 })
 
     const id = uuidv4();
+    const isScanned = false;
     const { phone, fullName, tickets} = output
-    const guest = { id, phone, fullName, tickets }
+    const guest = { id, phone, fullName, tickets, isScanned }
     
     await db.insert(Guests).values(guest);
     return new Response("Gueest inserted successfully", { status: 200 })
