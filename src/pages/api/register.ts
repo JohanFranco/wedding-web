@@ -1,26 +1,42 @@
 import type { APIRoute } from "astro";
-import { object, safeParse, string } from 'valibot'; 
+import { array, object, safeParse, string } from 'valibot'; 
 import { db, Guests } from 'astro:db'
 import { v4 as uuidv4 } from 'uuid'
 
-const RegisterSchema = object({
+const GuestSchema = object({
     phone: string(),
     fullName: string(),
     tickets: string()
 })
 
-export const POST: APIRoute = async ( {params, request} ) => {
+const RegisterSchema = array(GuestSchema);
 
-    const { success, output } = safeParse(RegisterSchema, await request.json())
-        if(!success) return new Response("Bad Request", { status: 400 })
+export const POST: APIRoute = async ({ params, request }) => {
+    const { success, output } = safeParse(RegisterSchema, await request.json());
+    if (!success) return new Response("Bad Schema", { status: 400 });
 
-    const id = uuidv4();
-    const isScanned = false;
-    const { phone, fullName, tickets} = output
-    const guest = { id, phone, fullName, tickets, isScanned }
-    
-    await db.insert(Guests).values(guest);
-    return new Response("Gueest inserted successfully", { status: 200 })
+    await db.delete(Guests).execute();
 
-}
+    const guests = output.map(guest => ({
+        id: uuidv4(),
+        phone: guest.phone,
+        fullName: guest.fullName,
+        tickets: guest.tickets,
+        isScanned: false
+    }));
 
+    await db.insert(Guests).values(guests);
+
+    return new Response("Guests inserted successfully", { status: 200 });
+};
+
+
+export const GET: APIRoute = async ( { params, request }) => {
+    const guests = await db.select().from(Guests)  
+    return new Response(JSON.stringify(guests), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }); 
+} 

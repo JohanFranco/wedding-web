@@ -23,7 +23,7 @@
     import 'notyf/notyf.min.css';
 
     const notyf = new Notyf({
-        duration: 5000
+        duration: 10000
     });
 
     const checkInvitations = async (event) => {
@@ -46,12 +46,34 @@
                 notyf.error('Ohh! Parece que no estás invitado. Suerte para la próxima.');
             } else {
                 const data = await response.json();
-                // Manejar la respuesta exitosa
+                const url = `${window.location.protocol}//${window.location.host}/invite?id=${data.id}`
+                sendLink(url, data.fullName, data.phone)
+               
             }
         } catch (error) {
             console.log("ERROR");
         }
     };
+
+    const sendLink = async (url, fullName, phone) => {
+        const response = await fetch('api/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone,
+                    url: "https://invitacion.com",
+                    fullName
+                })
+            });
+            if (!response.ok) {
+                window.location.href = url;            
+            } else {
+                window.location.href = url + "&success=true"; 
+            }
+        
+    }
 
     document.getElementById('myForm').addEventListener('submit', checkInvitations);
 </script>

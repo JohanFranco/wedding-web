@@ -1,0 +1,120 @@
+---
+import LayoutInvite from '../layouts/LayoutInvite.astro';
+import invite from '../assets/images/invite.png'
+---
+
+<LayoutInvite title="Invitación">
+    <div class="invite flex justify-center p-12" id="invite">
+   <div class="error max-w-screen-md bg-red-900" id="error">
+        <span class="text-xl text-white p-12">Parece que no has sido invitado. tal vez deberías tener más amigos.</span>
+   </div>
+
+   <div class="invited  sm:w-full md:w-1/2 bg-white drop-shadow-lg	" id="invited">
+       <div class="bg-white max-h-full text-center relative">
+          <img src={invite.src} alt="Invitación" class="">
+
+          <div class="absolute text-center top-0 w-full">
+            <h1 class="gupter text-6xl mt-10 mb-10">
+              MAGALY <br>
+              & <br>
+              RENE
+            </h1>
+            <span>Ya mero es nuestra boda y estás invitado, hijo de la burguer</span> <br>
+            <span id="name"></span>
+             <div class="flex justify-center w-full mt-10 mb-10 bg-transparent">
+                 <canvas id="canvas" class="bg-transparent"></canvas>
+             </div>
+             <span>Está invitación es válida para  <span id="tickets"></span> personas.</span>
+          </div>
+  
+       </div>
+   </div>
+   <button onclick="exportToPdf()">Descargar</button>
+</div>
+</LayoutInvite>
+
+
+<style>
+    .error{
+        display: none;
+    }
+
+    .invited{
+        display: none;
+        
+    }
+
+    .gupter{
+        font-family: "Gupter", serif !important;
+		    text-transform: uppercase;
+		    font-weight: 400;
+    }
+</style>
+
+<script>
+    import QRCode from 'qrcode'
+    import { Notyf } from 'notyf';
+    import 'notyf/notyf.min.css';
+    import html2canvas from 'html2canvas';
+    import { jsPDF } from 'jspdf';
+
+    const notyf = new Notyf({
+      duration: 5000
+    });
+  
+    const error = document.getElementById('error');
+    const invited = document.getElementById('invited');
+    const idParam = new URLSearchParams(window.location.search).get('id') || '';
+    const successParam = new URLSearchParams(window.location.search).get('success') || '';
+    const canvas = document.getElementById('canvas');
+    const name = document.getElementById('name');
+    const nTickets = document.getElementById('tickets');
+
+    const onload = async () => {
+
+      try {    
+        if(successParam != ""){
+            notyf.success("Hemos enviado el link de esta invitación a tu Whatsapp. Puedes consultarlo cuando gustes.");
+        }
+
+        const response = await fetch(`api/${idParam}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+        
+        if (!response.ok) {
+          error.style.display = 'block';
+          invited.style.display = 'none';
+        } else {
+            const data = await response.json();
+            error.style.display = 'none';
+            invited.style.display = 'block';
+            QRCode.toCanvas(canvas, data.id);
+            nTickets.innerText = data.tickets;
+            name.innerText = data.fullName;
+        }
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    };
+  
+    window.onload = onload;
+
+    const exportToPdf = async () => {
+      const { jsPDF } = window.jspdf;
+      const content = document.getElementById('content');
+      const canvas = await html2canvas(content);
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+      pdf.save('download.pdf');
+
+    }
+  </script>
