@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
 
     const twilio = await import('twilio'); 
-    const client = twilio.default('AC7711786f3f35463979f87ea3c3db5fa6', '2ed98d72c25870282b938b9561188641');
+    const client = twilio.default('', '');
 
     await client.messages.create({
       body: message,
