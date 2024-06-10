@@ -17,13 +17,13 @@ export const POST: APIRoute = async ({ request }) => {
   try {
 
     const twilio = await import('twilio'); 
-    const client = twilio.default('', '');
+    // const client = twilio.default('', '');
 
-    await client.messages.create({
-      body: message,
-      from: 'whatsapp:+14155238886', 
-      to: `whatsapp:+521${phone}`
-    });
+    // await client.messages.create({
+    //   body: message,
+    //   from: 'whatsapp:+14155238886', 
+    //   to: `whatsapp:+521${phone}`
+    // });
 
     return new Response("Message has been sent", { status: 200 });
   } catch (err) {
