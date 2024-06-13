@@ -79,7 +79,6 @@ import invite from '../assets/images/invite.png';
     import { Notyf } from 'notyf';
     import 'notyf/notyf.min.css';
     import html2canvas from 'html2canvas';
-    import jsPDF from 'jspdf';
 
     const notyf = new Notyf({
         duration: 10000
@@ -113,7 +112,7 @@ import invite from '../assets/images/invite.png';
                 const data = await response.json();
                 error.style.display = 'none';
                 invited.style.display = 'block';
-                QRCode.toCanvas(canvas, data.id);
+                QRCode.toCanvas(canvas,`${window.location.protocol}//${window.location.host}/checkInvite?id=${data.id}`);
                 nTickets.innerText = data.tickets;
                 name.innerText = data.fullName;
             }
@@ -122,9 +121,9 @@ import invite from '../assets/images/invite.png';
         }
     };
 
-    window.exportToPng = async () => {
+    const exportToPng = async () => {
         const content = document.getElementById('invited');
-        const canvas = await html2canvas(content, { scale: 3 }); // Aumenta la escala para mejorar la calidad
+        const canvas = await html2canvas(content, { scale: 3 }); 
         const imgData = canvas.toDataURL('image/png');
 
         const link = document.createElement('a');

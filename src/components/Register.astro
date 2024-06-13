@@ -30,8 +30,9 @@
         event.preventDefault();
 
         try {
-            const phone = document.getElementById('phone').value;
-
+            const phoneInput = document.getElementById('phone') as HTMLInputElement | null;
+            const phone = phoneInput.value;
+            
             const response = await fetch('api/confirm', {
                 method: 'POST',
                 headers: {
@@ -56,6 +57,7 @@
     };
 
     const sendLink = async (url, fullName, phone) => {
+
         const response = await fetch('api/message', {
                 method: 'POST',
                 headers: {
@@ -63,7 +65,7 @@
                 },
                 body: JSON.stringify({
                     phone,
-                    url: "https://invitacion.com",
+                    url,
                     fullName
                 })
             });
