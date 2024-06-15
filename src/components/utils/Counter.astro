@@ -30,37 +30,34 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-
-    const days = document.getElementById('days');
-    const hours = document.getElementById('hours');
-    const minutes = document.getElementById('minutes');
-    const seconds = document.getElementById('seconds');
-
-    const targetTime = new Date(`Octuber 18 2024 19:00:00`)
-    const currentTime = new Date()
-    let diff = targetTime - currentTime;    
-
-    const updateCountdown = () => {   
-    const remainingDays = Math.max(Math.floor(diff / 1000 / 60 / 60 / 24 ));
-    const remainingHours = Math.max(Math.floor(diff / 1000 / 60 / 60) % 24);
-    const remainingMinutes = Math.max(Math.floor(diff / 1000 / 60) % 60);
-    const remainingSeconds = Math.max(Math.floor(diff / 1000 ) % 60);
-
-
-    days.innerHTML = remainingDays
-    hours.innerHTML = remainingHours < 10 ? '0' + remainingHours  : remainingHours
-    minutes.innerHTML = remainingMinutes < 10 ? '0' + remainingMinutes : remainingMinutes
-    seconds.innerHTML = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds
-
-}
-
-const countdownInterval = setInterval(() => {
-  updateCountdown();
-      diff -= 1000;
-      if (diff < 0) {
-        diff = 0; 
-    }
-}, 1000);
-})
-
-</script>
+      const days = document.getElementById('days');
+      const hours = document.getElementById('hours');
+      const minutes = document.getElementById('minutes');
+      const seconds = document.getElementById('seconds');
+  
+      const targetTime = new Date('October 18 2024 19:00:00').getTime();
+      const currentTime = new Date().getTime();
+      let diff = targetTime - currentTime;
+  
+      const updateCountdown = () => {
+        const remainingDays = Math.max(Math.floor(diff / 1000 / 60 / 60 / 24));
+        const remainingHours = Math.max(Math.floor(diff / 1000 / 60 / 60) % 24);
+        const remainingMinutes = Math.max(Math.floor(diff / 1000 / 60) % 60);
+        const remainingSeconds = Math.max(Math.floor(diff / 1000) % 60);
+  
+        if (days) days.innerHTML = remainingDays.toString();
+        if (hours) hours.innerHTML = (remainingHours < 10 ? '0' + remainingHours : remainingHours).toString();
+        if (minutes) minutes.innerHTML = (remainingMinutes < 10 ? '0' + remainingMinutes : remainingMinutes).toString();
+        if (seconds) seconds.innerHTML = (remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds).toString();
+      };
+  
+      const countdownInterval = setInterval(() => {
+        updateCountdown();
+        diff -= 1000;
+        if (diff < 0) {
+          diff = 0;
+        }
+      }, 1000);
+    });
+  </script>
+  
